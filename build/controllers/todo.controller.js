@@ -12,11 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchSingleTodo = exports.createTodos = exports.getAllTodos = void 0;
+exports.deleteTodo = exports.updateTodo = exports.fetchSingleTodo = exports.createTodos = exports.getAllTodos = void 0;
 const Todo_1 = __importDefault(require("../model/Todo"));
 const getAllTodos = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const todos = yield Todo_1.default.find();
+        const todos = yield Todo_1.default.find({ status: 'active' });
         if (!todos.length) {
             res.status(404).json({ Not_found: 'Not Todo was found' });
         }
@@ -59,3 +59,31 @@ const fetchSingleTodo = (req, res) => __awaiter(void 0, void 0, void 0, function
     }
 });
 exports.fetchSingleTodo = fetchSingleTodo;
+const updateTodo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const updatedTodo = yield Todo_1.default.findByIdAndUpdate(req.params.id, {
+            $set: req.body
+        }, { new: true });
+        res.status(200).send(updatedTodo);
+    }
+    catch (error) {
+        res.status(500).send(error);
+    }
+});
+exports.updateTodo = updateTodo;
+const deleteTodo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { id } = req.params;
+        const deleteTodo = yield Todo_1.default.findByIdAndUpdate(id, { status: 'inactive' }, { new: true });
+        if (!deleteTodo) {
+            res.status(402).send({ Not_found: 'Could not find Todo' });
+        }
+        else {
+            res.status(201).send({ Success: `Successfully deleted ${deleteTodo}` });
+        }
+    }
+    catch (error) {
+        res.status(500).send(error);
+    }
+});
+exports.deleteTodo = deleteTodo;

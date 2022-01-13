@@ -5,10 +5,11 @@ const TodoSchema = new mongoose_1.Schema({
     title: {
         type: String,
         required: true,
+        unique: true
     },
     description: {
         type: String,
-        required: true,
+        required: true
     },
     status: {
         type: String,
@@ -22,4 +23,4 @@ const TodoSchema = new mongoose_1.Schema({
         required: true
     }
 }, { timestamps: true });
-exports.default = (0, mongoose_1.model)("Todo", TodoSchema);
+exports.default = (0, mongoose_1.model)('Todo', TodoSchema);

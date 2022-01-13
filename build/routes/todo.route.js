@@ -9,4 +9,6 @@ const todoRouter = express_1.default.Router();
 todoRouter.route('/fetch-todos').get(todo_controller_1.getAllTodos);
 todoRouter.route('/add-todo').post(todo_controller_1.createTodos);
 todoRouter.route('/fetch-todo/:id').get(todo_controller_1.fetchSingleTodo);
+todoRouter.route('/edit-todo/:id').put(todo_controller_1.updateTodo);
+todoRouter.route('/remove-todo/:id').delete(todo_controller_1.deleteTodo);
 exports.default = todoRouter;
