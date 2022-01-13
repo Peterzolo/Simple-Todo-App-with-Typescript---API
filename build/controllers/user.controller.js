@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userRegister = void 0;
+exports.userLogin = exports.userRegister = void 0;
 const User_1 = __importDefault(require("../model/User"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
@@ -50,3 +50,34 @@ const userRegister = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.userRegister = userRegister;
+const userLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { email, password } = req.body;
+        if (!email && !password)
+            res.status(404).json({ message: 'All fields must be completed' });
+        const checkUserExists = yield User_1.default.findOne({ email });
+        if (!checkUserExists) {
+            res.status(402).json({ message: 'Invalid parameters' });
+        }
+        else {
+            const isValidPassword = bcryptjs_1.default.compare(password, checkUserExists.password);
+            if (!isValidPassword) {
+                res.status(402).json({ message: "Invalid Credentials, 'Try again" });
+            }
+            else {
+                const payload = {
+                    email: checkUserExists.email,
+                    id: checkUserExists._id
+                };
+                const secret = 'jwt_secret';
+                const expiresIn = { expiresIn: '1h' };
+                const token = jsonwebtoken_1.default.sign(payload, secret, expiresIn);
+                res.status(200).json({ success: token });
+            }
+        }
+    }
+    catch (error) {
+        res.status(500).json(error);
+    }
+});
+exports.userLogin = userLogin;
