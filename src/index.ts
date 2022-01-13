@@ -2,7 +2,8 @@ import express, { Express } from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import todoRoutes from './routes/todo.route';
+import todoRoute from './routes/todo.route';
+import userRoute from './routes/user.route';
 
 const app: Express = express();
 
@@ -12,8 +13,9 @@ dotenv.config();
 app.use(cors());
 app.use(express.json());
 
-app.use('/api/todos', todoRoutes);
-// app.use(todoRoutes)
+app.use('/api/todos', todoRoute);
+app.use('/api/users', userRoute);
+
 
 const uri: string = 'mongodb://localhost:27017/Todo_Api-Typescript';
 // const options = { useNewUrlParser: true, useUnifiedTopology: true, useF }
